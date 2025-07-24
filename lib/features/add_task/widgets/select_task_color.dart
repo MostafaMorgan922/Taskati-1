@@ -4,9 +4,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SelectTaskColor extends StatelessWidget {
-  const SelectTaskColor({super.key});
+class SelectTaskColor extends StatefulWidget {
+ const SelectTaskColor({super.key});
 
+  @override
+  State<SelectTaskColor> createState() => _SelectTaskColorState();
+}
+
+class _SelectTaskColorState extends State<SelectTaskColor> {
+List<Color>colors=[
+  Colors.blueAccent,
+  Colors.black,
+  Colors.red,
+  Colors.yellow
+];
+int activeIndex=0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,16 +33,42 @@ class SelectTaskColor extends StatelessWidget {
         height: 50.h,
         child: ListView.separated(
          scrollDirection: Axis.horizontal,
-        itemBuilder: (context,index)=>CircleAvatar(
-          radius: 20.r,
-          backgroundColor: Colors.black,
-        child: Icon(Icons.check,color: Colors.white,),
+        itemBuilder: (context,index)=>ColorItem(
+          backgroundColor: colors[index],
+          onTap: (){
+           if(activeIndex!=index){
+             setState(() {
+               activeIndex=index;
+             });
+           }
+          },
+          isActive: index==activeIndex,
         ),
             separatorBuilder: (context,index)=>SizedBox(width: 10.w,),
-            itemCount: 3),
+            itemCount: colors.length),
       )
 
       ],
+    );
+  }
+}
+
+
+class ColorItem extends StatelessWidget {
+  final Color? backgroundColor;
+  final bool isActive;
+  final void Function()? onTap;
+  const ColorItem({super.key, this.backgroundColor,this.isActive=false, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap:onTap ,
+      child: CircleAvatar(
+        radius: 20.r,
+        backgroundColor:backgroundColor,
+        child:isActive? Icon(Icons.check,color: Colors.white,):null,
+      ),
     );
   }
 }

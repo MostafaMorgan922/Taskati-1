@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:taskati/features/home/models/task_model.dart';
 
 import '../../../core/theam/app_colores.dart';
 
@@ -10,21 +11,33 @@ class TasksListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Expanded(
+    return TaskModel.tasks.isEmpty?Column(
+      children: [
+        Image.asset('assets/images/empty_task (2).jpg'),
+        Text("you don't have any task yet!",style: TextStyle(
+          fontSize: 18.sp,
+          color: Colors.grey
+        ),),
+      ],
+    ) :Expanded(
       child: ListView.separated(
         separatorBuilder: (context,index)=>SizedBox(height: 10.h,),
-        itemCount: 10,
+        itemCount:TaskModel.tasks.length,
         itemBuilder: (context,index){
           return Dismissible(
               key: UniqueKey(),
-              child: TaskItem());
+              child: TaskItem(
+                taskModel:TaskModel.tasks[index],
+              ));
         },
       ),
     );
   }
 }
+
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+ final TaskModel taskModel;
+  const TaskItem({super.key, required this.taskModel,});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +46,7 @@ class TaskItem extends StatelessWidget {
             vertical:15.h
         ),
         decoration: BoxDecoration(
-            color: AppColors.mainColor,
+            color: taskModel.taskColor,
             borderRadius: BorderRadius.circular(12.r)
         ),
         child: IntrinsicHeight(
@@ -43,7 +56,7 @@ class TaskItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Flutter Task - 1',style: TextStyle(
+                    Text(taskModel.title,style: TextStyle(
                         fontSize: 22.sp,
                         color: Colors.white,
                         fontWeight: FontWeight.bold
@@ -52,7 +65,8 @@ class TaskItem extends StatelessWidget {
                     Row(children: [
                       Icon(Icons.alarm_add,color: Colors.white,),
                       SizedBox(width: 5.w,),
-                      Text('02:3 AM - 03:33 PM',style: TextStyle(
+                      Text('${taskModel.startTime}  -${taskModel.endTime}',
+                        style:TextStyle(
                         fontSize: 17.sp,
                         color: Colors.white,
 
@@ -61,7 +75,7 @@ class TaskItem extends StatelessWidget {
                       )
                     ],),
                     SizedBox(height: 10.h,),
-                    Text('I will do task',style: TextStyle(
+                    Text(taskModel.des,style: TextStyle(
                         color: Colors.white,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600
@@ -77,7 +91,7 @@ class TaskItem extends StatelessWidget {
               ),
               RotatedBox(
                 quarterTurns: 3,
-                child: Text('ToDo',style: TextStyle(
+                child: Text(taskModel.status,style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold

@@ -10,7 +10,10 @@ class TaskFromFieldWithTitle extends StatelessWidget {
  final String hintText;
  final int maxLine;
  final Icon? suffixIcon;
-  const TaskFromFieldWithTitle({super.key, required this.title, required this.hintText,  this.maxLine=1, this.suffixIcon  });
+ final TextEditingController? controller;
+ final String? Function(String?)? validator;
+ final void Function()? onTap;
+  const TaskFromFieldWithTitle({super.key, required this.title, required this.hintText,  this.maxLine=1, this.suffixIcon, this.validator, this.onTap, this.controller  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +26,18 @@ class TaskFromFieldWithTitle extends StatelessWidget {
         ),),
         SizedBox(height: 10.h,),
         TextFormField(
+          controller:controller ,
+          onTap:onTap ,
+          readOnly: onTap!=null,
           cursorColor: AppColors.mainColor,
-          keyboardType: TextInputType.phone ,
+          keyboardType: TextInputType.number ,
           maxLines: maxLine,
-
+          validator:validator,
           decoration: InputDecoration(
             suffixIcon:suffixIcon ,
-
-            enabledBorder:OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r)
-            ) ,
+             border:OutlineInputBorder(
+             borderRadius: BorderRadius.circular(12.r)
+    ) ,
             focusedBorder:OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.mainColor),
                 borderRadius: BorderRadius.circular(12.r)
